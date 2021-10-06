@@ -3,32 +3,19 @@ version: 2.1
 orbs:
   welcome: circleci/welcome-orb@0.4.1
 
+commands:
+  print_pipeline_id:
+    steps:
+      - run: echo << parameters.to >>
+
 jobs:
-  share_file:
+  reuse_cmd:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - run:
-          name: "Share output file"
-          command: |
-            echo "Hello World ! " > ~/output.txt
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - output.txt
-
-  print_file_output:
-    docker:
-        - image: circleci/node:13.8.0
-    steps:
-        - attach_workspace:
-            at: ~/
-        - run: cat ~/output.txt
-            
+      - print_pipeline_id
+    
 workflows:
   welcome:
     jobs:
-      - share_file
-      - print_file_output:
-          requires:
-            - share_file
+      - reuse_cmd
