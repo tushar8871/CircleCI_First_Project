@@ -12,7 +12,7 @@ jobs:
       - run:
           name: "Say Environment variable name"
           command: |
-            echo ${Name}
+            echo $MY_ENV_VAR
 
 workflows:
   welcome:
