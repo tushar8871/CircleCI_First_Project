@@ -5,6 +5,10 @@ orbs:
 
 commands:
   print_pipeline_id:
+    parameters:
+      to:
+        type: string
+        default: "Hello World"
     steps:
       - run: echo << parameters.to >>
 
