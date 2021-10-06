@@ -35,6 +35,6 @@ workflows:
   welcome:
     jobs:
       - share_file
-      - print_output_file:
+      - print_file_output:
           requires:
             - share_file
