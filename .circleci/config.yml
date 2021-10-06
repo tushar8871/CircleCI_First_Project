@@ -3,23 +3,17 @@ version: 2.1
 orbs:
   welcome: circleci/welcome-orb@0.4.1
 
-commands:
-  print_pipeline_id:
-    parameters:
-      to:
-        type: string
-        default: "Hello World"
-    steps:
-      - run: echo << parameters.to >>
-
 jobs:
-  reuse_cmd:
+  onfail:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - print_pipeline_id
+      - run: ech "Job fail"
+      - run: 
+          command: echo "Pre Step Fails "
+          when: on_fail
     
 workflows:
   welcome:
     jobs:
-      - reuse_cmd
+      - onfail
