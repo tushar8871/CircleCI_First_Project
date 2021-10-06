@@ -11,7 +11,8 @@ jobs:
       - checkout
       - run:
           name: "Say Environment variable name"
-          command: echo $Name
+          command: |
+            echo $Name
 
 workflows:
   welcome:
