@@ -4,17 +4,37 @@ orbs:
   welcome: circleci/welcome-orb@0.4.1
 
 jobs:
-  print_env:
+  share_file:
     docker:
       - image: circleci/node:13.8.0
     steps:
       - checkout
       - run:
-          name: "Say Environment variable name"
+          name: "Share output file"
           command: |
-            echo $MY_ENV_VAR
+            echo "Hello World ! " > output.txt
+      - persist_to_workspace:
+          root: /tmp/dir
+          paths:
+            - foo/bar
+            - baz
 
+  print_file_output:
+    docker:
+        - image: circleci/node:13.8.0
+    steps:
+        - checkout
+        - run:
+            name: "Print output file"
+            command: |
+              cat output.txt
+        - attach_workspace:
+            at: /tmp/dir
+            
 workflows:
   welcome:
     jobs:
-      - print_env
+      - share_file
+      - print_output_file:
+          requires:
+            - share_file
