@@ -10,12 +10,25 @@ jobs:
     steps:
       - checkout
       - run: npm install
+      - run: npm run build
       - save_cache:
           paths:
             - /src/node_nodules
+          key: "npm-packages"
+
+  test:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run: npm run test
+      - restore_cache:
           key: "npm-packages"
     
 workflows:
   welcome:
     jobs:
       - build
+      - test:
+          requires:
+            - build 
