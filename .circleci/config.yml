@@ -4,14 +4,16 @@ orbs:
   welcome: circleci/welcome-orb@0.4.1
 
 jobs:
-  onfail:
+  build:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - run: ech "Job fail"
-      - run: 
-          command: echo "Pre Step Fails "
-          when: on_fail
+      - checkout
+      - run: npm install
+      - save_cache:
+          paths:
+            - /src/node_nodules
+          key: "npm-packages"
     
 workflows:
   welcome:
