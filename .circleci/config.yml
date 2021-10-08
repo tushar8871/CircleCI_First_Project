@@ -4,6 +4,23 @@ orbs:
   welcome: circleci/welcome-orb@0.4.1
 
 jobs: 
+  build_backend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          name: npm install and build
+          working_directory: ./backend
+          command: |
+            npm install
+            npm run build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - backend/node_modules
+            - backend/dist
+
   build_frontend:
     docker:
       - image: circleci/node:13.8.0
@@ -32,7 +49,7 @@ jobs:
 workflows:
   welcome:
     jobs:
-      - build_frontend
- #     - test:
- #         requires:
- #           - build 
+      - build_backend
+      - build_frontend:
+          requires:
+            - build_backend
