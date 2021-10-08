@@ -46,7 +46,7 @@ jobs:
          name: npm test 
          working_directory: ./backend
          command: |
-           npm run test
+           npm test 
       - attach_workspace:
           at: .
         

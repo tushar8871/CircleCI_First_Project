@@ -1,7 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-    "\\.circleci"
+    "\\.circleci",
+    "\\backend",
+    "\\backend\\src",
+    "\\util"
   ],
+  "SelectedNode": "\\backend\\src\\main.ts",
   "PreviewInSolutionExplorer": false
 }
