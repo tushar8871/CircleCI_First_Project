@@ -62,6 +62,19 @@ jobs:
          working_directory: ./frontend
          command: |
            npm run test
+
+  backend_scan:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+         name: Scan Vulnerabilities Backend 
+         working_directory: ./backend
+         command: |
+           npm audit --audit-level critical
         
 workflows:
   welcome:
@@ -74,3 +87,6 @@ workflows:
       - frontend_test:
           requires:
             - build_frontend
+      - backend_scan:
+          requires:
+            - build_backend 
