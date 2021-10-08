@@ -29,7 +29,7 @@ jobs:
 workflows:
   welcome:
     jobs:
-      - build
+      - build_frontend
  #     - test:
  #         requires:
  #           - build 
