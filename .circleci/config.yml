@@ -48,8 +48,7 @@ jobs:
          name: npm test 
          working_directory: ./backend
          command: |
-           npm install
-           npm test 
+           npm install --save-dev jest-junit
         
 workflows:
   welcome:
