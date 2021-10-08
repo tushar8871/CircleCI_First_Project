@@ -84,7 +84,7 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-         name: Scan Vulnerabilities Backend 
+         name: Scan Vulnerabilities Frontend 
          working_directory: ./frontend
          command: |
            npm audit --audit-level critical
