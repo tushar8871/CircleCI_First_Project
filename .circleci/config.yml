@@ -41,9 +41,9 @@ jobs:
     docker:
       - image: circleci/node:13.8.0
     steps:
+      - checkout
       - attach_workspace:
           at: .
-      - checkout
       - run:
          name: npm test 
          working_directory: ./backend
@@ -54,9 +54,7 @@ workflows:
   welcome:
     jobs:
       - build_backend
-      - build_frontend:
-          requires:
-            - build_backend
+      - build_frontend
       - backend_test:
           requires:
             - build_backend
