@@ -74,7 +74,7 @@ jobs:
          name: Scan Vulnerabilities Backend 
          working_directory: ./backend
          command: |
-           npm audit --audit-level critical
+           npm audit fix --audit-level critical
         
 workflows:
   welcome:
