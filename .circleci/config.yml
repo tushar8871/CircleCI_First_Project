@@ -41,14 +41,14 @@ jobs:
     docker:
       - image: circleci/node:13.8.0
     steps:
+      - attach_workspace:
+          at: .
       - checkout
       - run:
          name: npm test 
          working_directory: ./backend
          command: |
            npm test 
-      - attach_workspace:
-          at: .
         
 workflows:
   welcome:
