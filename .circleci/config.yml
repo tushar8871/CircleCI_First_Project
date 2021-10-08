@@ -87,7 +87,8 @@ jobs:
          name: Scan Vulnerabilities Frontend 
          working_directory: ./frontend
          command: |
-           npm audit fix --audit-level critical
+           npm install
+           npm audit --audit-level critical
         
 workflows:
   welcome:
