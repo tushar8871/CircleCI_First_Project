@@ -3,32 +3,33 @@ version: 2.1
 orbs:
   welcome: circleci/welcome-orb@0.4.1
 
-jobs:
-  build:
+jobs: 
+  build_frontend:
     docker:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - working_directory: ./frontend
       - run: npm install
       - run: npm run build
-      - save_cache:
+      - persist_to_workspace:
+          root: .
           paths:
-            - /src/node_nodules
-          key: "npm-packages"
+            - frontend/node_modules
 
-  test:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - checkout
-      - run: npm run test
-      - restore_cache:
-          key: "npm-packages"
+#  test:
+#    docker:
+#      - image: circleci/node:13.8.0
+#    steps:
+#      - checkout
+#      - run: npm run test
+#      - restore_cache:
+#          key: "npm-packages"
     
 workflows:
   welcome:
     jobs:
       - build
-      - test:
-          requires:
-            - build 
+ #     - test:
+ #         requires:
+ #           - build 
