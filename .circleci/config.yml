@@ -54,7 +54,9 @@ workflows:
   welcome:
     jobs:
       - build_backend
-      - build_frontend
+      - build_frontend:
+          requires:
+            - build_backend
       - backend_test:
           requires:
             - build_backend
