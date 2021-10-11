@@ -106,13 +106,14 @@ jobs:
            aws cloudformation deploy \
              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:5}" \
              --template-file backend_server.yaml \
-             --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:5}"
+             --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:5}" \
+             --tags project=udapeople
       - run:
           name: Save Backend URL 
           command: |
-            BACKEND_IP=$(aws ec2 describe-instances \
+            export BACKEND_IP=$(aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:project,Values=Backend_Udapeople-${CIRCLE_WORKFLOW_ID:0:5}" \
+              --filters "Name=tag:project,Values=udapeople" \
               --output text)
 
             echo $BACKEND_IP
@@ -125,7 +126,8 @@ jobs:
            aws cloudformation deploy \
              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:5}" \
              --template-file frontend_server.yaml \
-             --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:5}"
+             --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:5}" \
+             --tags project=udapeople
 
       - run:
          name: Add Backend Ip to inventory file
@@ -133,7 +135,7 @@ jobs:
          command: |
            aws ec2 describe-instances \
              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-             --filters "Name=tag:project,Values=Backend_Udapeople-${CIRCLE_WORKFLOW_ID:0:5}" \
+             --filters "Name=tag:project,Values=udapeople" \
              --output text >> inventory
            cat inventory
       - persist_to_workspace:
