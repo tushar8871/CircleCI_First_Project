@@ -2,6 +2,9 @@ Description: >
   UdaPeople Stack Backend.
 
 Parameters:
+  ID:
+    Description: Unique identifier.
+    Type: String
   ImageId:
     Type: String
     Description: Linux 2 AMI for us-east-1 Region
@@ -37,3 +40,6 @@ Resources:
           DeleteOnTermination: true
           GroupSet:
             - !Ref Udacity-SG
+      Tags:
+        - Key: Name
+          Value: !Sub Backend_Udapeople-${ID}
