@@ -1,6 +1,6 @@
 ---
 
-- name: "configuration Infrastructure." 
+- name: configuration Infrastructure 
   hosts: web
   user: ubuntu
   gather_facts: false
