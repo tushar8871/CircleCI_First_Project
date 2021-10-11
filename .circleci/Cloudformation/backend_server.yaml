@@ -5,10 +5,6 @@ Parameters:
   ID:
     Description: Unique identifier.
     Type: String
-  ImageId:
-    Type: String
-    Description: Linux 2 AMI for us-east-1 Region
-    Default: "ami-09e67e426f25ce0d7"
   InstanceType:
     Type: String
     Description: Choosing  t2 micro because it is free
@@ -31,8 +27,7 @@ Resources:
   UdacityWebServerEC2:
     Type: 'AWS::EC2::Instance'
     Properties:
-      ImageId:
-        - Ref: ImageId
+      ImageId: "ami-09e67e426f25ce0d7"
       KeyName: 
         - Ref: KeyName
       InstanceType: 
