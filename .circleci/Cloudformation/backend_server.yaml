@@ -8,7 +8,7 @@ Parameters:
   ImageId:
     Type: String
     Description: Linux 2 AMI for us-east-1 Region
-    Default: ami-09e67e426f25ce0d7
+    Default: "ami-09e67e426f25ce0d7"
   InstanceType:
     Type: String
     Description: Choosing  t2 micro because it is free
@@ -16,7 +16,7 @@ Parameters:
   KeyName:
     Description: SSH Keypair to login to the instance
     Type: 'AWS::EC2::KeyPair::KeyName'
-    Default: Udacity_IAC
+    Default: "Udacity_IAC"
 Resources: 
   UdacitySG:
     Type: 'AWS::EC2::SecurityGroup'
