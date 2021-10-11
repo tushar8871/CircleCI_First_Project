@@ -123,4 +123,4 @@ workflows:
           requires:
             - build_frontend 
       - create_infrastructure:
-          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          requires: [frontend_test, backend_test, frontend_scan, backend_scan]
