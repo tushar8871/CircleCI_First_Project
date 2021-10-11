@@ -127,23 +127,22 @@ jobs:
              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:5}"
 
       - run:
-          name: Add Backend Ip to inventory file
-          working_directory: ./.circleci/ansible/
-          command: |
-            aws ec2 describe-instances \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:project,Values=Backend_Udapeople-${CIRCLE_WORKFLOW_ID:0:5}" \
-              --output text >> inventory
-            cat inventory
-      
+         name: Add Backend Ip to inventory file
+         working_directory: ./.circleci/ansible/
+         command: |
+           aws ec2 describe-instances \
+             --query 'Reservations[*].Instances[*].PublicIpAddress' \
+             --filters "Name=tag:project,Values=Backend_Udapeople-${CIRCLE_WORKFLOW_ID:0:5}" \
+             --output text >> inventory
+           cat inventory
       - persist_to_workspace:
-          root: . 
-          paths:
-            -  .circleci/ansible/inventory
+         root: . 
+         paths:
+           -  .circleci/ansible/inventory
    
   configure-infra:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: python:3.9.0-alpine
     steps:
       - checkout
       - attach_workspace:
@@ -152,6 +151,7 @@ jobs:
           fingerprints: ["8a:8e:f7:d1:ae:75:09:d7:91:08:11:67:70:07:ec:cb"] 
       - run:
           name: Install Dependencies to backend server
+          working_directory: ./.circleci/ansible
           command: |
             apk add --update ansible
             ansible --version
