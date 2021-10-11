@@ -8,7 +8,6 @@ Parameters:
   InstanceType:
     Type: String
     Description: Choosing  t2 micro because it is free
-    Default: "t2.micro"
   KeyName:
     Description: SSH Keypair to login to the instance
     Type: 'AWS::EC2::KeyPair::KeyName'
@@ -30,8 +29,7 @@ Resources:
       ImageId: "ami-09e67e426f25ce0d7"
       KeyName: 
         - Ref: KeyName
-      InstanceType: 
-        - Ref: InstanceType
+      InstanceType: "t2.micro"
       NetworkInterfaces:
         - DeviceIndex: 0
           AssociatePublicIpAddress: true
