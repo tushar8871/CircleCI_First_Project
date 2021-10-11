@@ -29,7 +29,7 @@ Resources:
       ImageId: "ami-09e67e426f25ce0d7"
       KeyName: 
         - Ref: KeyName
-      InstanceType: "t2.micro"
+      InstanceType: t2.micro
       NetworkInterfaces:
         - DeviceIndex: 0
           AssociatePublicIpAddress: true
