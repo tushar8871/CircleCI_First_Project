@@ -136,12 +136,12 @@ jobs:
            aws ec2 describe-instances \
              --query 'Reservations[*].Instances[*].PublicIpAddress' \
              --filters "Name=tag:project,Values=udapeople" \
-             --output text >> inventory
-           cat inventory
+             --output text >> inventory.txt
+           cat inventory.txt
       - persist_to_workspace:
          root: . 
          paths:
-           -  .circleci/ansible
+           -  .circleci/ansible/inventory.txt
    
   configure-infra:
     docker:
@@ -154,17 +154,18 @@ jobs:
           fingerprints: ["8a:8e:f7:d1:ae:75:09:d7:91:08:11:67:70:07:ec:cb"] 
       - run:
           name: Install Dependencies to backend server
-          working_directory: ./.circleci/ansible
+          working_directory: ./.circleci/ansible/
           command: |
             apk add --update ansible
             ansible --version
+            pip install awscli
       - run:
           name: Configuring backend server
           working_directory: ./circleci/ansible/
           command: |
             pwd &&
             ls -la
-            cat inventory
+            cat inventory.txt
             ansible-playbook -i inventory configure-server.yml
  
         
