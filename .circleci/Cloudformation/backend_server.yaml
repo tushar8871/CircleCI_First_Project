@@ -5,9 +5,6 @@ Parameters:
   ID:
     Description: Unique identifier.
     Type: String
-  InstanceType:
-    Type: String
-    Description: Choosing  t2 micro because it is free
   KeyName:
     Description: SSH Keypair to login to the instance
     Type: 'AWS::EC2::KeyPair::KeyName'
