@@ -161,7 +161,6 @@ jobs:
             pip install awscli
       - run:
           name: Configuring backend server
-          working_directory: ./
           command: |
             pwd &&
             ls -larth
