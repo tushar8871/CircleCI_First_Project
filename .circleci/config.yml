@@ -100,14 +100,21 @@ jobs:
           working_directory: ./
           command: yum install -y tar gzip
       - run:
-         name: Create Infrastructure 
+         name: Create Infrastructure for Backend
          working_directory: ./.circleci/Cloudformation/
          command: |
            aws cloudformation deploy \
              --stack-name "udapeople-${CIRCLE_WORKFLOW_ID:0:5}" \
              --template-file backend_server.yaml \
              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:5}" 
-      #- destroy_environment
+      - run:
+         name: Create Infrastructure for Frontend
+         working_directory: ./.circleci/Cloudformation/
+         command: |
+           aws cloudformation deploy \
+             --stack-name "udapeople-${CIRCLE_WORKFLOW_ID:0:5}" \
+             --template-file Frontend_server.yaml \
+             --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:5}"
         
 workflows:
   welcome:
