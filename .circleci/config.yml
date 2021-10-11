@@ -115,6 +115,7 @@ jobs:
               --filters "Name=tag:project,Values=Backend_Udapeople-${CIRCLE_WORKFLOW_ID:0:5}" \
               --output text)
 
+            echo $BACKEND_IP
             curl -H "Content-Type: text/plain" -H "token: 3b83cd84-cf9f-451f-a7cd-9fbc3fed481d" --request PUT --data "http://$BACKEND_IP:3030" https://api.memstash.io/values/Backend-URL
 
       - run:
@@ -133,9 +134,8 @@ jobs:
            aws ec2 describe-instances \
              --query 'Reservations[*].Instances[*].PublicIpAddress' \
              --filters "Name=tag:project,Values=Backend_Udapeople-${CIRCLE_WORKFLOW_ID:0:5}" \
-             --output text 
-             #>> inventory
-           #cat inventory
+             --output text >> inventory
+           cat inventory
       - persist_to_workspace:
          root: . 
          paths:
