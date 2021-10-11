@@ -140,6 +140,10 @@ jobs:
           root: . 
           paths:
             -  .circleci/ansible/inventory.txt
+      - destroy_environment:
+          id: ${CIRCLE_WORKFLOW_ID:0:5}
+          when: on_fail
+
   configure-infra:
     docker:
       - image: python:3.7-alpine3.11
@@ -152,6 +156,7 @@ jobs:
       - run:
           name: Install Dependencies to backend server
           command: |
+            sudo apt update
             apt-get install ansible -y
             ansible --version
       - run:
@@ -160,26 +165,30 @@ jobs:
           command: |
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
+      - destroy_environment:
+          id: ${CIRCLE_WORKFLOW_ID:0:5}
+          when: on_fail
+
         
 workflows:
   welcome:
     jobs:
-      - build_backend
-      - build_frontend
-      - backend_test:
-          requires:
-            - build_backend
-      - frontend_test:
-          requires:
-            - build_frontend
-      - backend_scan:
-          requires:
-            - build_backend 
-      - frontend_scan:
-          requires:
-            - build_frontend 
-      - create_infrastructure:
-         requires: [frontend_test, backend_test, frontend_scan, backend_scan]
+#      - build_backend
+#      - build_frontend
+#      - backend_test:
+#          requires:
+#            - build_backend
+#      - frontend_test:
+#          requires:
+#            - build_frontend
+#      - backend_scan:
+#          requires:
+#            - build_backend 
+#      - frontend_scan:
+#          requires:
+ #           - build_frontend 
+      - create_infrastructure #:
+#         requires: [frontend_test, backend_test, frontend_scan, backend_scan]
       - configure-infra:
           requires:
             - create_infrastructure 
