@@ -139,7 +139,7 @@ jobs:
       - persist_to_workspace:
          root: . 
          paths:
-           -  .circleci/ansible/inventory
+           -  .circleci/ansible
    
   configure-infra:
     docker:
