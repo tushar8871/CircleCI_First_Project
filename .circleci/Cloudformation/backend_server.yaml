@@ -9,7 +9,7 @@ Resources:
   UdacitySG:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
-      GroupName: InstanceSG
+      GroupName: InstanceSG-${ID}
       GroupDescription: Allow http to our EC2 instance
       SecurityGroupIngress:
         - IpProtocol: tcp
