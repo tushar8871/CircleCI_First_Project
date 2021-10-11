@@ -103,7 +103,8 @@ jobs:
          name: Create Infrastructure 
          working_directory: ./.circleci/Cloudformation/
          command: |
-           aws cloudformation create-stack udapeople-${CIRCLE_WORKFLOW_ID} \
+           aws cloudformation create-stack \
+             -- stack-name udapeople-${CIRCLE_WORKFLOW_ID} \
              -- template-body backend_server.yaml
       #- destroy_environment
         

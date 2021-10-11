@@ -36,4 +36,4 @@ Resources:
           AssociatePublicIpAddress: true
           DeleteOnTermination: true
           GroupSet:
-            - !Ref UdacitySG
+            - !Ref Udacity-SG
