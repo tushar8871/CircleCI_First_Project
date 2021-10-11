@@ -122,5 +122,5 @@ workflows:
       - frontend_scan:
           requires:
             - build_frontend 
-      - create-infrastructure:
+      - create_infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
