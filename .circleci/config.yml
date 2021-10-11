@@ -103,7 +103,7 @@ jobs:
          command: |
            aws cloudformation create-stack udapeople-${CIRCLE_WORKFLOW_ID} \
              -- template-body backend_server.yaml
-      - destroy_environment
+      #- destroy_environment
         
 workflows:
   welcome:
