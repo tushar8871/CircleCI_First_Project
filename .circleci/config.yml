@@ -159,7 +159,9 @@ jobs:
           name: Configuring backend server
           working_directory: ./circleci/ansible/
           command: |
-            cat inventory.txt
+            pwd &&
+            ls -la
+            cat inventory
             ansible-playbook -i inventory configure-server.yml
  
         
