@@ -115,7 +115,7 @@ jobs:
               --filters "Name=tag:project,Values=Backend_Udapeople-${CIRCLE_WORKFLOW_ID:0:5}" \
               --output text)
 
-            curl -H "Content-Type: text/plain" -H "token: 3b83cd84-cf9f-451f-a7cd-9fbc3fed481d" --request PUT --data "http://${Backend_IP}:3030" https://api.memstash.io/values/Backend-URL
+            curl -H "Content-Type: text/plain" -H "token: 3b83cd84-cf9f-451f-a7cd-9fbc3fed481d" --request PUT --data "http://$Backend_IP:3030" https://api.memstash.io/values/Backend-URL
 
       - run:
          name: Create Infrastructure for Frontend
