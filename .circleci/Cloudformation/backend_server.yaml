@@ -42,7 +42,7 @@ Resources:
           AssociatePublicIpAddress: true
           DeleteOnTermination: true
           GroupSet:
-            - !Ref UdacitySG
+            - !Ref Udacity-SG
       Tags:
         - Key: Name
           Value: !Sub Backend_Udapeople-${ID}
