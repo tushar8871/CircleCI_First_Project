@@ -1,0 +1,39 @@
+Description: >
+  UdaPeople Stack Backend.
+
+Parameters:
+  ImageId:
+    Type: String
+    Description: Linux 2 AMI for us-east-1 Region
+    Default: ami-09e67e426f25ce0d7
+  InstanceType:
+    Type: String
+    Description: Choosing  t2 micro because it is free
+    Default: t2.micro
+  KeyName:
+    Description: SSH Keypair to login to the instance
+    Type: 'AWS::EC2::KeyPair::KeyName'
+    Default: Udacity_IAC
+Resources: 
+  UdacitySG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupName: InstanceSG
+      GroupDescription: Allow http to our EC2 instance
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0
+  UdacityWebServerEC2:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      ImageId: !Ref ImageId
+      KeyName: !Ref KeyName
+      InstanceType: !Ref InstanceType
+      NetworkInterfaces:
+        - DeviceIndex: 0
+          AssociatePublicIpAddress: true
+          DeleteOnTermination: true
+          GroupSet:
+            - !Ref UdacitySG

@@ -2,9 +2,12 @@
   "ExpandedNodes": [
     "",
     "\\.circleci",
-    "\\backend",
-    "\\backend\\src",
+    "\\.circleci\\ansible\\roles",
+    "\\.circleci\\ansible\\roles\\configure-server",
+    "\\.circleci\\ansible\\roles\\configure-server\\tasks",
+    "\\.circleci\\Cloudformation",
     "\\util"
   ],
+  "SelectedNode": "\\.circleci\\Cloudformation\\backend_server.yaml",
   "PreviewInSolutionExplorer": false
 }
