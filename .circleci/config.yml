@@ -139,24 +139,47 @@ jobs:
       - persist_to_workspace:
           root: . 
           paths:
-            -  .circleci/ansible/inventory.txt     
+            -  .circleci/ansible/inventory.txt
+  configure-infra:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - attach_workspace:
+          at: . 
+      - add_ssh_keys:
+          fingerprints: ["8a:8e:f7:d1:ae:75:09:d7:91:08:11:67:70:07:ec:cb"] 
+      - run:
+          name: Install Dependencies to backend server
+          command: |
+            apt-get install ansible -y
+            ansible --version
+      - run:
+          name: Configuring backend server
+          working_directory: ./circleci/ansible/
+          command: |
+            cat inventory.txt
+            ansible-playbook -i inventory.txt configure-server.yml
         
 workflows:
   welcome:
     jobs:
-#      - build_backend
-#      - build_frontend
-#      - backend_test:
-#          requires:
-#            - build_backend
-#      - frontend_test:
-#          requires:
-#            - build_frontend
-#      - backend_scan:
-#          requires:
-#            - build_backend 
-#      - frontend_scan:
-#          requires:
-#            - build_frontend 
-      - create_infrastructure #:
- #         requires: [frontend_test, backend_test, frontend_scan, backend_scan]
+      - build_backend
+      - build_frontend
+      - backend_test:
+          requires:
+            - build_backend
+      - frontend_test:
+          requires:
+            - build_frontend
+      - backend_scan:
+          requires:
+            - build_backend 
+      - frontend_scan:
+          requires:
+            - build_frontend 
+      - create_infrastructure:
+         requires: [frontend_test, backend_test, frontend_scan, backend_scan]
+      - configure-infra:
+          requires:
+            - create_infrastructure 
