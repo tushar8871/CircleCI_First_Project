@@ -98,7 +98,7 @@ jobs:
       - run:
           name: Install Tar dependecy
           working_directory: ./
-          command: apt-get install -y tar gzip
+          command: yum install -y tar gzip
       - run:
          name: Create Infrastructure 
          working_directory: ./.circleci/Cloudformation/
