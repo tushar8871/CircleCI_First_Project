@@ -17,12 +17,12 @@
       repo: deb https://deb.nodesource.com/node_13.x bionic main
       update_cache: yes
 
-  - name: Install the nodejs
-    become: true
+  - name: "install nodejs and npm"
+    become: yes
     apt:
+      name: ["nodejs", "npm"]
+      state: latest
       update_cache: yes
-      name: nodejs
-      state: present
 
   - name: "Install NPM-distributed command-line tools"
     become: true
