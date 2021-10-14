@@ -177,6 +177,7 @@ jobs:
       - run:
           working_directory: ./backend
           command: |
+            npm install
             npm run migrations > migration_output.txt
          
 workflows:
