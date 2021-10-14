@@ -178,7 +178,7 @@ jobs:
           working_directory: ./backend
           command: |
             npm run migrations > migration_output.txt
-            cat ./migration_output.txt
+         
 workflows:
   welcome:
     jobs:
@@ -204,4 +204,3 @@ workflows:
       - run-migrations:
           requires:
             - configure-infra
-
