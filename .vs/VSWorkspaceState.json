@@ -6,9 +6,7 @@
     "\\.circleci\\ansible\\roles",
     "\\.circleci\\ansible\\roles\\configure-server",
     "\\.circleci\\ansible\\roles\\configure-server\\tasks",
-    "\\.circleci\\ansible\\roles\\deploy\\tasks",
     "\\util"
   ],
-  "SelectedNode": "\\.circleci\\ansible\\roles\\configure-server\\tasks\\main.yaml",
   "PreviewInSolutionExplorer": false
 }
