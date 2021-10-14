@@ -1,25 +1,41 @@
 ---
-  - name: Update all packages
-    become: true
+  - name: "update apt packages."
+    become: yes
     apt:
-      upgrade: "yes"
-
-  - name: "Add nodejs apt key"
-    become: true
-    apt_key:
-      url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
-      state: present
-
-  - name: "Add nodejs 13.x ppa for apt repo"
-    become: true
-    apt_repository:
-      repo: deb https://deb.nodesource.com/node_13.x bionic main
       update_cache: yes
 
-  - name: Install the nodejs
-    shell: |      
-      apt-get install -y nodejs
+  - name: "upgrade packages"
+    become: yes
+    apt:
+      upgrade: yes
 
-  - name: Check Versions 
-    shell: |
-      node --version
+  - name: "remove dependencies that are no longer required"
+    become: yes
+    apt:
+      autoremove: yes
+
+  - name: "install nodejs and npm"
+    become: yes
+    apt:
+      name: ["nodejs", "npm"]
+      state: latest
+      update_cache: yes
+
+  - name: "install n"
+    become: yes
+    npm:
+      name: n
+      global: yes
+      production: yes
+
+  - name: "install nodejs 13.8.0"
+    become: yes
+    shell: n 13.8.0
+
+  - name: "install pm2"
+    become: yes
+    npm:
+      name: pm2
+      global: yes
+      production: yes
+      state: present
