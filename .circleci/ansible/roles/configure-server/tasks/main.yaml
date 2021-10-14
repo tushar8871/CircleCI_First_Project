@@ -16,20 +16,9 @@
       repo: deb https://deb.nodesource.com/node_13.x bionic main
       update_cache: yes
 
-
-  - name: "install node packages"
-    become: true
-    apt:
-      name: ["nodejs", "npm"]
-      state: latest
-      update_cache: yes
-
-  - name: "install pm2 package"
-    become: true
-    npm:
-      name: pm2
-      global: yes
-      production: yes
+  - name: Install the nodejs
+    apt:      
+      name: nodejs
       state: present
 
   - name: Check Versions 
