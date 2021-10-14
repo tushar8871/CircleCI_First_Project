@@ -18,7 +18,7 @@
 
   - name: Install the nodejs
     shell: |      
-      sudo apt-get install -y nodejs
+      apt-get install -y nodejs
 
   - name: Check Versions 
     shell: |
