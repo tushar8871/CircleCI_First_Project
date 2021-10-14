@@ -204,3 +204,4 @@ workflows:
       - run-migrations:
           requires:
             - configure-infra
+
