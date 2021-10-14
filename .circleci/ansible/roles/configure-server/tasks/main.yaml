@@ -2,8 +2,7 @@
   - name: Update all packages
     become: true
     apt:
-      upgrade: yes
-      update_cache: yes
+      upgrade: "yes"
 
   - name: "Add nodejs apt key"
     become: true
@@ -17,7 +16,8 @@
       repo: deb https://deb.nodesource.com/node_13.x bionic main
       update_cache: yes
 
-  - name: "install nodejs and NPM "
+
+  - name: "install node packages"
     become: true
     apt:
       name: ["nodejs", "npm"]
@@ -29,6 +29,7 @@
     npm:
       name: pm2
       global: yes
+      production: yes
       state: present
 
   - name: Check Versions 
