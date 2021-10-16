@@ -3,6 +3,32 @@ version: 2.1
 orbs:
   welcome: circleci/welcome-orb@0.4.1
 
+commands:
+  destroy_environment:
+    description: Destroy Cloud Formation Stacks and infrastructure
+    parameters:
+      when:
+        type: string
+      id:
+        type: string
+    steps:
+      - run:
+          name: Destroy udapeople backend cfn stack
+          command: |
+            aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.id >>
+          environment:
+            TERM: xterm-256color
+          when: << parameters.when >>
+      - run:
+          name: Destroy udapeople frontend cfn stack and S3 bucket
+          command: |
+            aws s3 rm s3://udapeople-<< parameters.id >> --recursive
+            aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.id >>
+          environment:
+              TERM: xterm-256color
+          when: << parameters.when >>
+
+
 jobs: 
   build_backend:
     docker:
@@ -165,6 +191,9 @@ jobs:
             ls -larth
             cat ./inventory.txt
             ansible-playbook -i ./inventory.txt ./configure-server.yml
+      - destroy_environment:
+          id: ${CIRCLE_WORKFLOW_ID:0:5}
+          when: on_fail
  
   run-migrations:
     docker:
@@ -172,10 +201,14 @@ jobs:
     steps:
       - checkout
       - run:
-          working_directory: ./backend
           command: |
+            cd backend
+            ls -lathr
             npm install
             npm run migrations
+      - destroy_environment:
+          id: ${CIRCLE_WORKFLOW_ID:0:5}
+          when: on_fail
             
 workflows:
   welcome:
