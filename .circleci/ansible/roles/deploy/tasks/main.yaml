@@ -12,7 +12,7 @@
   - name: "copy node_modules to destination"
     become: yes
     synchronize:
-      src: /backend/node_modules
+      src: ../../backend/node_modules
       dest: /home/ubuntu/udapeople
       recursive: true
 
