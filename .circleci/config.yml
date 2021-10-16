@@ -272,6 +272,7 @@ jobs:
           command: |
             export API_URL=$(curl -H "token: 3b83cd84-cf9f-451f-a7cd-9fbc3fed481d" --request GET https://api.memstash.io/values/Backend-URL)
             echo ${API_URL}
+            npm install
             npm run build
       - run:
           name: Deploy frontend to s3 bucket
