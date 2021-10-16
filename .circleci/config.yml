@@ -19,8 +19,7 @@ jobs:
           root: .
           paths:
             - backend/node_modules
-            - backend/dist
-
+           
   build_frontend:
     docker:
       - image: circleci/node:13.8.0
@@ -172,14 +171,12 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - attach_workspace:
-          at: .
       - run:
           working_directory: ./backend
           command: |
             npm install
-            npm run build
-            npm run migrations > runMigration.log         
+            npm run migrations
+            
 workflows:
   welcome:
     jobs:
