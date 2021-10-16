@@ -22,7 +22,7 @@ commands:
       - run:
           name: Destroy udapeople frontend cfn stack and S3 bucket
           command: |
-            aws s3 rm "s3://udapeople-<< parameters.id >>" --recursive
+            aws s3 rm "s3://frontend-udapeople-<< parameters.id >>" --recursive
             aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.id >>
           environment:
               TERM: xterm-256color
@@ -223,7 +223,7 @@ jobs:
             if grep -q "has been executed successfully" migration_output
             then
               echo "DB Migrated succesfully."
-              Success = $(curl -H "Content-Type: text/plain" -H "token: 14d0481f-c882-4a51-9fd4-940ad20a1d2e" --request PUT --data "success" https://api.memstash.io/values/DB_Migration_${CIRCLE_WORKFLOW_ID:0:5})
+              export Success=$(curl -H "Content-Type: text/plain" -H "token: 14d0481f-c882-4a51-9fd4-940ad20a1d2e" --request PUT --data "success" https://api.memstash.io/values/DB_Migration_${CIRCLE_WORKFLOW_ID:0:5})
               echo "${Success}"
             else
               echo "DB migrartion failed!"
