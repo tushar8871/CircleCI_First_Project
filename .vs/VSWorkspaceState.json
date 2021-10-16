@@ -2,11 +2,12 @@
   "ExpandedNodes": [
     "",
     "\\.circleci",
-    "\\.circleci\\ansible",
     "\\.circleci\\ansible\\roles",
-    "\\.circleci\\ansible\\roles\\configure-server",
     "\\.circleci\\ansible\\roles\\configure-server\\tasks",
+    "\\backend",
+    "\\backend\\src",
     "\\util"
   ],
+  "SelectedNode": "\\backend\\src\\main.ts",
   "PreviewInSolutionExplorer": false
 }
