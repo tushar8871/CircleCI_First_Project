@@ -6,7 +6,7 @@
     become: yes
     synchronize:
       src: ../../backend/dist
-      dest: /home/ubuntu/udapeople/dist
+      dest: /home/ubuntu/udapeople
       recursive: true
 
   - name: "delete anything that might already be running"
