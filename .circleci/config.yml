@@ -290,7 +290,7 @@ jobs:
           id: ${CIRCLE_WORKFLOW_ID:0:5}
           when: on_fail
 
-  backned_deploy:
+  backend_deploy:
     docker:
       - image: python:3.9.0-alpine
     steps:
@@ -346,7 +346,7 @@ workflows:
       - run-migrations:
           requires:
             - configure-infra
-      - backned_deploy:
+      - backend_deploy:
           requires:
             - run-migrations 
       - frontend_deploy:
