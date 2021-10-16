@@ -45,6 +45,7 @@ jobs:
           root: .
           paths:
             - backend/node_modules
+            - backend/dist
            
   build_frontend:
     docker:
@@ -200,6 +201,16 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - attach_workspace:
+          at: . 
+      - run:
+          name: Install AWS CLI dependencies
+          working_directory: /tmp
+          command: |
+            sudo apt-get update && sudo apt-get install -yy less
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
       - run:
           name: Migrate DB
           working_directory: ./backend
@@ -222,7 +233,22 @@ jobs:
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:5}
           when: on_fail
+  
+  frontend_deploy:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - attach_workspace:
+          at: . 
+      - run:
+          name: Install Node Dependencies
+          command: |
+            apk add --update bash
+            apk add --update npm
+            npm --version
             
+          
 workflows:
   welcome:
     jobs:
@@ -248,3 +274,6 @@ workflows:
       - run-migrations:
           requires:
             - configure-infra
+      - frontend_deploy:
+          requires:
+            - run-migrations 
