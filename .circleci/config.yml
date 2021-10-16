@@ -303,6 +303,7 @@ jobs:
           name: Install Node Dependencies
           command: |
             apk add --update ansible
+            apk add --update curl
             apk add --update npm
             pip3 install awscli
             npm --version
