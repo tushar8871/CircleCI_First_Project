@@ -9,14 +9,14 @@
   - name: "copy backend dependency"
     become: yes
     synchronize:
-      src: ../../backend/dist
+      src: /backend/dist
       dest: /udapeople
       recursive: true
 
   - name: "copy node_modules to destination"
     become: yes
     synchronize:
-      src: ../../backend/node_modules
+      src: /backend/node_modules
       dest: /udapeople
       recursive: true
 
