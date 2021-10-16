@@ -1,10 +1,4 @@
 ---
-  - name: "Create directory"
-    become: true
-    file:
-      path: ~/udapeople/
-      state: directory
-
   - name: "copy backend dependency"
     become: true
     synchronize:
