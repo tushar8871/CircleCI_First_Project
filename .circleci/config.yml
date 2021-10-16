@@ -177,9 +177,9 @@ jobs:
       - run:
           working_directory: ./backend
           command: |
-            ls -larth
-            npm run migrations > migration_output   
-         
+            npm install
+            npm run build
+            npm run migrations > runMigration.log         
 workflows:
   welcome:
     jobs:
