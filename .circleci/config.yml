@@ -306,49 +306,14 @@ jobs:
           name: Deploying backend application using ansible
           working_directory: ./.circleci/ansible
           command: |
-            ls -larth
+            ls -larth ../../
             cat ./inventory.txt
             ansible-playbook -i ./inventory.txt ./deploy-backend.yml
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:5}
           when: on_fail
 
-  smoke_test:
-    docker:
-      - image: python:3.9.0-alpine
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Install dependencies
-          command: |
-            apk add --update curl
-            pip3 install awscli
-      - run:
-          name: Smoke Test on Backend
-          working_directory: ./backend
-          command: |
-            export backend_url=$(curl -H "token: 3b83cd84-cf9f-451f-a7cd-9fbc3fed481d" --request GET https://api.memstash.io/values/Backend-URL)
-            curl "$backend_url/api/status"
 
-      - run:
-          name: Smoke Test on Frontend
-          working_directory: ./frontend
-          command: |
-            export frontend_url="http://frontend-udapeople-${CIRCLE_WORKFLOW_ID}.s3-website-us-east-1.amazonaws.com/#/employees"
-            if curl -s ${frontend_url} | grep "Welcome"
-            then
-              return 1
-            else
-              return 0
-            fi
-      - destroy_environment:
-          id: ${CIRCLE_WORKFLOW_ID:0:5}
-          when: on_fail
-      - revert_migrations:
-          id: ${CIRCLE_WORKFLOW_ID:0:5}
-          when: on_fail
   
 workflows:
   welcome:
