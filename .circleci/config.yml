@@ -307,16 +307,11 @@ jobs:
             npm --version
       - run:
           name: Deploying backend application using ansible
-          working_directory: ./
           command: | 
-            ls -larth
             cd ./backend
             npm install
-            npm run build
             cd ../.circleci/ansible  
             cat ./inventory.txt
-            ls -larth ../../
-            ls -larth ../../backend/
             ansible-playbook -i ./inventory.txt ./deploy-backend.yml
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:5}
