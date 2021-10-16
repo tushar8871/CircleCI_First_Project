@@ -201,8 +201,6 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - attach_workspace:
-          at: . 
       - run:
           name: Install AWS CLI dependencies
           working_directory: /tmp
@@ -221,7 +219,7 @@ jobs:
           name: Save Migration Result to Memstash IO
           working_directory: ./backend
           command: |
-            if [ grep "has been executed successfully" ./migration_output.log]
+            if grep -q "has been executed successfully" migration_output.log;
             then
               echo "DB Migrated succesfully."
               Success = $(curl -H "Content-Type: text/plain" -H "token: 14d0481f-c882-4a51-9fd4-940ad20a1d2e" --request PUT --data "success" https://api.memstash.io/values/DB_Migration_${CIRCLE_WORKFLOW_ID:0:5})
@@ -284,7 +282,7 @@ jobs:
           command: |
             ls -larth
             cat ./inventory.txt
-
+            ansible-playbook -i ./inventory.txt ./deploy-backend.yaml
           
 workflows:
   welcome:
@@ -313,4 +311,7 @@ workflows:
             - configure-infra
       - frontend_deploy:
           requires:
-            - run-migrations       
+            - run-migrations 
+      - backend_deploy:
+          requires:
+            - run-migrations 
