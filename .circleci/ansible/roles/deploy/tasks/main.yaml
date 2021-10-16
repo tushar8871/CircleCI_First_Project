@@ -2,12 +2,15 @@
   - name: "show remote environment"
     shell: env
   - name: Creates directory
+    become: yes
+    become_method: "sudo"
     file:
       path: /udapeople
       state: directory
 
   - name: "copy backend dependency"
     become: yes
+    become_method: "sudo"
     synchronize:
       src: /backend/dist
       dest: /udapeople
@@ -15,6 +18,7 @@
 
   - name: "copy node_modules to destination"
     become: yes
+    become_method: "sudo"
     synchronize:
       src: /backend/node_modules
       dest: /udapeople

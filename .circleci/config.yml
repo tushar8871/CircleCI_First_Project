@@ -313,7 +313,7 @@ jobs:
             mkdir udapeople
             cd ./.circleci/ansible
             cat ./inventory.txt
-            ansible-playbook -i ./inventory.txt ./deploy-backend.yml
+            ansible-playbook -i ./inventory.txt ./deploy-backend.yml -vvv
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:5}
           when: on_fail
