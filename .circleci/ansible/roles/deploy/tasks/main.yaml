@@ -1,4 +1,11 @@
 ---
+  - name: "show remote environment"
+    shell: env
+  - name: Creates directory
+    file:
+      path: /udapeople
+      state: directory
+
   - name: "copy backend dependency"
     become: yes
     synchronize:
