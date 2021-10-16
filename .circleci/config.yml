@@ -346,8 +346,7 @@ workflows:
           requires:
             - configure-infra
       - frontend_deploy:
-          requires:
-            - run-migrations 
+          requires: [run-migrations,backend_deploy] 
       - backned_deploy:
           requires:
             - run-migrations 
