@@ -307,8 +307,13 @@ jobs:
             npm --version
       - run:
           name: Deploying backend application using ansible
-          working_directory: ./.circleci/ansible
-          command: |
+          working_directory: ./
+          command: | 
+            ls -larth
+            cd ./backend
+            npm install
+            npm run build
+            cd ./.circleci/ansible  
             cat ./inventory.txt
             ls -larth ../../
             ls -larth ../../backend/
