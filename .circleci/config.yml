@@ -278,6 +278,13 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Install Node Dependencies
+          command: |
+            apk add --update ansible
+            apk add --update npm
+            pip3 install awscli
+            npm --version
+      - run:
           name: Deploying backend application using ansible
           working_directory: ./.circleci/ansible
           command: |
