@@ -242,10 +242,10 @@ jobs:
             if grep -q "has been executed successfully" migration_output
             then
               echo "DB Migrated succesfully."
-              export Success=$(curl -H "Content-Type: text/plain" -H "token: 14d0481f-c882-4a51-9fd4-940ad20a1d2e" --request PUT --data "success" https://api.memstash.io/values/DB_Migration_${CIRCLE_WORKFLOW_ID:0:5})
+              export Success=$(curl -H "Content-Type: text/plain" -H "token: 3b83cd84-cf9f-451f-a7cd-9fbc3fed481d" --request PUT --data "success" https://api.memstash.io/values/DB_Migration_${CIRCLE_WORKFLOW_ID:0:5})
               echo "${Success}"
             else
-              curl -H "Content-Type: text/plain" -H "token: 14d0481f-c882-4a51-9fd4-940ad20a1d2e" --request PUT --data "failure" https://api.memstash.io/values/DB_Migration_${CIRCLE_WORKFLOW_ID:0:5}
+              curl -H "Content-Type: text/plain" -H "token: 3b83cd84-cf9f-451f-a7cd-9fbc3fed481d" --request PUT --data "failure" https://api.memstash.io/values/DB_Migration_${CIRCLE_WORKFLOW_ID:0:5}
             fi
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:5}
@@ -310,6 +310,8 @@ jobs:
       - run:
           name: Deploying backend application using ansible
           command: |
+            ls -larth
+            tar -C backend -czvf artifact.tar.gz .
             cd ./.circleci/ansible
             cat ./inventory.txt
             ansible-playbook -i ./inventory.txt ./deploy-backend.yml
