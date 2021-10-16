@@ -221,7 +221,7 @@ jobs:
           name: Save Migration Result to Memstash IO
           working_directory: ./backend
           command: |
-            if grep -q "has been executed successfully" migration_output.log
+            if grep -q "has been executed successfully" migration_output.log;
             then
               echo "DB Migrated succesfully."
               Success = $(curl -H "Content-Type: text/plain" -H "token: 14d0481f-c882-4a51-9fd4-940ad20a1d2e" --request PUT --data "success" https://api.memstash.io/values/DB_Migration_${CIRCLE_WORKFLOW_ID:0:5})
@@ -236,7 +236,7 @@ jobs:
   
   frontend_deploy:
     docker:
-      - image: amazon/aws-cli
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
       - attach_workspace:
@@ -246,8 +246,27 @@ jobs:
           command: |
             apk add --update bash
             apk add --update npm
+            pip3 install awscli
             npm --version
-            
+      - run:
+          name: Building frontend with API_URL
+          working_directory: ./frontend
+          command: |
+            API_URL=$(curl -H "Content-Type: text/plain" -H "token: 3b83cd84-cf9f-451f-a7cd-9fbc3fed481d" --request PUT --data "http://$BACKEND_IP:3030" https://api.memstash.io/values/Backend-URL)
+            echo ${API_URL}
+            npm run build
+      - run:
+          name: Deploy frontend to s3 bucket
+          working_directory: ./frontend
+          command: |
+            aws s3 cp ./dist s3://frontend-udapeople-${CIRCLE_WORKFLOW_ID:0:5}/ --recursive
+      - persist_to_workspace:
+          root: .
+          paths:
+            - frontend/dist 
+      - destroy_environment:
+          id: ${CIRCLE_WORKFLOW_ID:0:5}
+          when: on_fail
           
 workflows:
   welcome:
