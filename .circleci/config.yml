@@ -22,7 +22,7 @@ commands:
       - run:
           name: Destroy udapeople frontend cfn stack and S3 bucket
           command: |
-            aws s3 rm s3://udapeople-<< parameters.id >> --recursive
+            aws s3 rm s3://udapeople-<< parameters.id >>/ --recursive
             aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.id >>
           environment:
               TERM: xterm-256color
@@ -283,6 +283,9 @@ jobs:
             ls -larth
             cat ./inventory.txt
             ansible-playbook -i ./inventory.txt ./deploy-backend.yaml
+      - destroy_environment:
+          id: ${CIRCLE_WORKFLOW_ID:0:5}
+          when: on_fail
           
 workflows:
   welcome:
@@ -312,6 +315,6 @@ workflows:
       - frontend_deploy:
           requires:
             - run-migrations 
-      - backend_deploy:
+      - backned_deploy:
           requires:
             - run-migrations 
