@@ -340,7 +340,7 @@ jobs:
           command: |
             backend_url="$(curl -H "token: 3b83cd84-cf9f-451f-a7cd-9fbc3fed481d" --request GET https://api.memstash.io/values/Backend-URL)"
             curl "$backend_url"
-            echo "API TEST : ${backend_url}"
+            echo "API TEST : ${backend_url}/api/status"
             if curl -s ${backend_url} | grep -c 'status':'ok'
             then
               return 0
@@ -352,7 +352,7 @@ jobs:
           name: Smoke Test on Frontend
           working_directory: ./frontend
           command: |
-            frontend_url="http://frontend-udapeople-${CIRCLE_WORKFLOW_ID}.s3-website-us-east-1.amazonaws.com/#/employees"
+            frontend_url="http://frontend-udapeople-${CIRCLE_WORKFLOW_ID}.s3-website-us-east-1.amazonaws.com/"
             if curl -s ${frontend_url} | grep "Welcome"
             then
               return 0
@@ -423,3 +423,6 @@ workflows:
           requires: [run-migrations,backend_deploy] 
       - smoke_test:
           requires: [frontend_deploy,backend_deploy]
+      - cloudfront-update:
+          requires:
+            - smoke_test
