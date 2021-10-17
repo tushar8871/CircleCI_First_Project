@@ -405,6 +405,7 @@ jobs:
       - run:
           name: Get Old Workflow Id
           command: |
+            set TERM=xterm
             OldWorkflowID = $(curl -H "token: 14d0481f-c882-4a51-9fd4-940ad20a1d2e" --request GET https://api.memstash.io/values/WorkflowID)
             echo $OldWorkflowID
             CurrentWorkflowID = ${CIRCLE_WORKFLOW_ID:0:5}
@@ -419,8 +420,6 @@ jobs:
             else
               echo "$OldWorkflowID==$CurrentWorkflowID => nothing needs to be done..."
             fi
-      - environment:
-         TERM: xterm-256color
 
 workflows:
   welcome:
