@@ -378,15 +378,6 @@ jobs:
             curl -sL https://rpm.nodesource.com/setup_13.x | bash -
             yum install -y nodejs
       - run:
-          name: Store Old workflow id to memstash
-          command: |
-            export PrevWorkflowID=$(aws cloudformation \
-              list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-              --no-paginate --output text)
-
-            echo $PrevWorkflowID
-            curl -H "Content-Type: text/plain" -H "token: 14d0481f-c882-4a51-9fd4-940ad20a1d2e" --request PUT --data "$PrevWorkflowID" https://api.memstash.io/values/PrevWorkflowID
-      - run:
           name: Update cloudfront distribution
           working_directory: ./.circleci/Cloudformation
           command: |
@@ -408,13 +399,15 @@ jobs:
           name: Get Old Workflow Id
           command: |
             set TERM=xterm
+            export OldWorkflowID=$(aws cloudformation \
+              list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+              --no-paginate --output text)
+            export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
+              --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
 
-            oldWorkflowID=$(curl -H "token: 14d0481f-c882-4a51-9fd4-940ad20a1d2e" --request GET https://api.memstash.io/values/PrevWorkflowID)
-            echo $oldWorkflowID
-            export CurrentWorkflowID = ${CIRCLE_WORKFLOW_ID:0:5}
-            echo $CurrentWorkflowID
-
-            if [[ "$CurrentWorkflowID" != "$oldWorkflowID" ]]
+            echo $OldWorkflowID
+            
+            if [[ "${STACKS[@]}" =~ "$oldWorkflowID" ]]
             then
               echo "$oldWorkflowID!=$CurrentWorkflowID => Delete old version"
               aws s3 rm "s3://udapeople-${oldWorkflowID}" --recursive
