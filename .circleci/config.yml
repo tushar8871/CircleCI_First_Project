@@ -340,7 +340,7 @@ jobs:
             backend_url="$(curl -H "token: 3b83cd84-cf9f-451f-a7cd-9fbc3fed481d" --request GET https://api.memstash.io/values/Backend-URL)"
             curl "$backend_url/api/status"
             echo "API TEST : ${backend_url}/api/status"
-            if curl -s ${backend_url} | grep -c 'status':'ok'
+            if curl -s ${backend_url} | grep ok
             then
               return 0
             else
