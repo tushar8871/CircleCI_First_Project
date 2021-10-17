@@ -158,9 +158,8 @@ jobs:
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:project,Values=udapeople" \
+              --filters "Name=tag:project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:5}" \
               --output text)
-
             echo $BACKEND_IP
             curl -H "Content-Type: text/plain" -H "token: 3b83cd84-cf9f-451f-a7cd-9fbc3fed481d" --request PUT --data "http://$BACKEND_IP:3030" https://api.memstash.io/values/Backend-URL
 
@@ -180,7 +179,7 @@ jobs:
          command: |
            aws ec2 describe-instances \
              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-             --filters "Name=tag:project,Values=udapeople" \
+             --filters "Name=tag:project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:5}" \
              --output text >> inventory.txt
            cat inventory.txt
       - persist_to_workspace:
@@ -339,7 +338,7 @@ jobs:
           working_directory: ./backend
           command: |
             backend_url="$(curl -H "token: 3b83cd84-cf9f-451f-a7cd-9fbc3fed481d" --request GET https://api.memstash.io/values/Backend-URL)"
-            curl "$backend_url"
+            curl "$backend_url/api/status"
             echo "API TEST : ${backend_url}/api/status"
             if curl -s ${backend_url} | grep -c 'status':'ok'
             then
