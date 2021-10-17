@@ -425,38 +425,38 @@ jobs:
 workflows:
   welcome:
     jobs:
-#      - build_backend:
-#           filters:
-#             branches:
-#               only: feature/build-infra
-#      - build_frontend:
-#           filters:
-#             branches:
-#               only: feature/build-infra
-#      - backend_test:
-#          requires:
-#            - build_backend
-#          filters:
-#            branches:
-#              only: feature/build-infra
-#      - frontend_test:
-#          requires:
-#            - build_frontend
-#          filters:
-#            branches:
-#              only: feature/build-infra
-#      - backend_scan:
-#          requires:
-#            - build_backend 
-#          filters:
-#            branches:
-#              only: feature/build-infra
-#      - frontend_scan:
-#          requires:
-#           - build_frontend 
-#          filters:
-#            branches:
-#              only: feature/build-infra
+      - build_backend:
+           filters:
+             branches:
+               only: feature/build-infra
+      - build_frontend:
+           filters:
+             branches:
+               only: feature/build-infra
+      - backend_test:
+          requires:
+            - build_backend
+          filters:
+            branches:
+              only: feature/build-infra
+      - frontend_test:
+          requires:
+            - build_frontend
+          filters:
+            branches:
+              only: feature/build-infra
+      - backend_scan:
+          requires:
+            - build_backend 
+          filters:
+            branches:
+              only: feature/build-infra
+      - frontend_scan:
+          requires:
+           - build_frontend 
+          filters:
+            branches:
+              only: feature/build-infra
       - create_infrastructure #:
 #         requires: [frontend_test, backend_test, frontend_scan, backend_scan]
       - configure-infra:
