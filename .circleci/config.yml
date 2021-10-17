@@ -378,6 +378,13 @@ jobs:
             curl -sL https://rpm.nodesource.com/setup_13.x | bash -
             yum install -y nodejs
       - run:
+          name: Store Old workflow id to memstash
+          command: |
+            export WorkflowID=$(aws cloudformation \
+              list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+              --no-paginate --output text)
+            curl -H "Content-Type: text/plain" -H "token: 14d0481f-c882-4a51-9fd4-940ad20a1d2e" --request PUT --data "$WorkflowID" https://api.memstash.io/values/WorkflowID
+      - run:
           name: Update cloudfront distribution
           working_directory: ./.circleci/Cloudformation
           command: |
@@ -396,12 +403,24 @@ jobs:
     steps:
       - checkout 
       - run:
-          name: Store Old workflow id to memstash
+          name: Get Old Workflow Id
           command: |
-            export OldWorkflowID=$(aws cloudformation \
-              list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-              --no-paginate --output text)
-            curl -H "Content-Type: text/plain" -H "token: 14d0481f-c882-4a51-9fd4-940ad20a1d2e" --request PUT --data "$OldWorkflowID" https://api.memstash.io/values/OldWorkflowID 
+            OldWorkflowID = $(curl -H "token: 14d0481f-c882-4a51-9fd4-940ad20a1d2e" --request GET https://api.memstash.io/values/WorkflowID)
+            echo $OldWorkflowID
+            CurrentWorkflowID = ${CIRCLE_WORKFLOW_ID:0:5}
+            echo $CurrentWorkflowID
+
+             if [[ "$CurrentWorkflowID" != "$OldWorkflowID" ]]
+            then
+              echo "$OldWorkflowID!=$CurrentWorkflowID => will delete old version"
+              aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
+            else
+              echo "$OldWorkflowID==$CurrentWorkflowID => nothing needs to be done..."
+            fi
+
+
 
 workflows:
   welcome:
@@ -456,3 +475,6 @@ workflows:
       - cloudfront-update:
           requires:
             - smoke_test
+      - cleanup-phase:
+          requires:
+            - cloudfornt-update 
