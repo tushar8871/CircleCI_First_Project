@@ -378,33 +378,30 @@ jobs:
             curl -sL https://rpm.nodesource.com/setup_13.x | bash -
             yum install -y nodejs
       - run:
-          name: Get Old Workflow Id
+          name: Update cloudfront distribution
+          working_directory: ./.circleci/Cloudformation
           command: |
             set TERM=xterm
             export OldWorkflowID=$(aws cloudformation \
               list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
               --no-paginate --output text)
             echo $OldWorkflowID
-      - run:
-          name: Update cloudfront distribution
-          working_directory: ./.circleci/Cloudformation
-          command: |
+ 
             aws cloudformation deploy \
               --template-file cloudfront.yaml \
               --stack-name udapeople-cloudfront-production-${CIRCLE_WORKFLOW_ID} \
               --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:5}" \
               --tags project=udapeople
+            
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
               --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
-      - run:
-           name: Remove Old Stacks
-           command: | 
-             if [[ "${STACKS[@]}" =~ "$oldWorkflowID" ]]
-             then
-              aws s3 rm "s3://frontend-udapeople-${OldWorkflowID}" --recursive
-              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
-              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
-             fi
+
+            if [[ "${STACKS[@]}" =~ "$oldWorkflowID" ]]
+            then
+             aws s3 rm "s3://frontend-udapeople-${OldWorkflowID}" --recursive
+             aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
+             aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
+            fi
       - revert_migrations:
           id: ${CIRCLE_WORKFLOW_ID:0:5}
           when: on_fail
