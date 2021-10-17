@@ -409,15 +409,6 @@ jobs:
           id: ${CIRCLE_WORKFLOW_ID:0:5}
           when: on_fail
 
-  cleanup-phase:
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout 
-      
-            
-            
-
 workflows:
   version: 2
   welcome:
@@ -474,6 +465,3 @@ workflows:
       - cloudfront-update:
           requires:
             - smoke_test
-      - cleanup-phase:
-          requires:
-            - cloudfront-update 
