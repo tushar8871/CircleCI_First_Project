@@ -9,6 +9,13 @@
       dest: /home/ubuntu/udapeople
       recursive: true
 
+  - name: "copy node_modules"
+    become: yes
+    synchronize:
+      src: ../../backend/node_modules
+      dest: /home/ubuntu/udapeople
+      recursive: true
+
   - name: "delete anything that might already be running"
     become: true
     command: pm2 delete all
@@ -16,6 +23,6 @@
 
   - name: "start server"
     become: true
-    command: pm2 start -f ./main.js
+    command: pm2 start npm -- run start
     args:
-      chdir: /home/ubuntu/udapeople/dist
+      chdir: /home/ubuntu/udapeople

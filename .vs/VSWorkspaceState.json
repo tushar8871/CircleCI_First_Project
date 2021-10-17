@@ -2,12 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\.circleci",
+    "\\.circleci\\ansible",
     "\\.circleci\\ansible\\roles",
     "\\.circleci\\ansible\\roles\\configure-server\\tasks",
-    "\\backend",
-    "\\backend\\src",
+    "\\.circleci\\ansible\\roles\\deploy",
+    "\\.circleci\\ansible\\roles\\deploy\\tasks",
+    "\\.circleci\\Cloudformation",
+    "\\backend\\src\\migrations",
     "\\util"
   ],
-  "SelectedNode": "\\backend\\src\\main.ts",
+  "SelectedNode": "\\.circleci\\ansible\\deploy-backend.yml",
   "PreviewInSolutionExplorer": false
 }
