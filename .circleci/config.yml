@@ -345,7 +345,7 @@ jobs:
           name: Smoke Test on Frontend
           working_directory: ./frontend
           command: |
-            export frontend_url="http://frontend-udapeople-${CIRCLE_WORKFLOW_ID}.s3-website-us-east-1.amazonaws.com"
+            frontend_url="http://frontend-udapeople-${CIRCLE_WORKFLOW_ID}.s3-website-us-east-1.amazonaws.com/#/employees"
             if curl -s ${frontend_url} | grep "Welcome"
             then
               return 1
@@ -362,8 +362,8 @@ jobs:
 workflows:
   welcome:
     jobs:
-      - build_backend
-      - build_frontend
+#      - build_backend
+#      - build_frontend
 #      - backend_test:
 #          requires:
 #            - build_backend
