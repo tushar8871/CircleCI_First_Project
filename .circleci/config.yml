@@ -383,6 +383,8 @@ jobs:
             export WorkflowID=$(aws cloudformation \
               list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
               --no-paginate --output text)
+
+            echo $WorkflowID
             curl -H "Content-Type: text/plain" -H "token: 14d0481f-c882-4a51-9fd4-940ad20a1d2e" --request PUT --data "$WorkflowID" https://api.memstash.io/values/WorkflowID
       - run:
           name: Update cloudfront distribution
@@ -407,19 +409,19 @@ jobs:
           command: |
             set TERM=xterm
 
-            export OldWorkflowID=$(curl -H "token: 14d0481f-c882-4a51-9fd4-940ad20a1d2e" --request GET https://api.memstash.io/values/WorkflowID)
-            echo $OldWorkflowID
+            oldWorkflowID=$(curl -H "token: 14d0481f-c882-4a51-9fd4-940ad20a1d2e" --request GET https://api.memstash.io/values/WorkflowID)
+            echo $oldWorkflowID
             export CurrentWorkflowID = ${CIRCLE_WORKFLOW_ID:0:5}
             echo $CurrentWorkflowID
 
-            if [[ "$CurrentWorkflowID" != "$OldWorkflowID" ]]
+            if [[ "$CurrentWorkflowID" != "$oldWorkflowID" ]]
             then
-              echo "$OldWorkflowID!=$CurrentWorkflowID => Delete old version"
-              aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
-              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
-              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
+              echo "$oldWorkflowID!=$CurrentWorkflowID => Delete old version"
+              aws s3 rm "s3://udapeople-${oldWorkflowID}" --recursive
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-${oldWorkflowID}"
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${oldWorkflowID}"
             else
-              echo "$OldWorkflowID==$CurrentWorkflowID => nothing needs to be done..."
+              echo "$oldWorkflowID==$CurrentWorkflowID => nothing needs to be done..."
             fi
 
 workflows:
