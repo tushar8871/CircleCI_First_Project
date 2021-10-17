@@ -340,6 +340,12 @@ jobs:
           command: |
             export backend_url=$(curl -H "token: 3b83cd84-cf9f-451f-a7cd-9fbc3fed481d" --request GET https://api.memstash.io/values/Backend-URL)
             curl "$backend_url"
+            if curl -s ${backend_url} | grep "OK"
+            then
+              return 1
+            else
+              return 0
+            fi
 
       - run:
           name: Smoke Test on Frontend
