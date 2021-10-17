@@ -40,7 +40,7 @@ commands:
           name: Revert migrations
           working_directory: ./backend
           command: |
-            SUCCESS=$(curl -H "token: 14d0481f-c882-4a51-9fd4-940ad20a1d2e" --request GET https://api.memstash.io/values/DB_Migration_${CIRCLE_WORKFLOW_ID:0:5})
+            SUCCESS=$(curl -H "token: 3b83cd84-cf9f-451f-a7cd-9fbc3fed481d" --request GET https://api.memstash.io/values/DB_Migration_${CIRCLE_WORKFLOW_ID:0:5})
             echo $SUCCESS
             if [[ "$SUCCESS" == "success" ]]
             then
@@ -338,13 +338,14 @@ jobs:
           name: Smoke Test on Backend
           working_directory: ./backend
           command: |
-            export backend_url=$(curl -H "token: 3b83cd84-cf9f-451f-a7cd-9fbc3fed481d" --request GET https://api.memstash.io/values/Backend-URL)
+            backend_url="$(curl -H "token: 3b83cd84-cf9f-451f-a7cd-9fbc3fed481d" --request GET https://api.memstash.io/values/Backend-URL)"
             curl "$backend_url"
-            if curl -s ${backend_url} | grep "ok"
+            echo "API TEST : ${backend_url}"
+            if curl -s ${backend_url} | grep -c 'status':'ok'
             then
               return 1
             else
-              return 0
+              return 1
             fi
 
       - run:
@@ -356,7 +357,7 @@ jobs:
             then
               return 1
             else
-              return 0
+              return 1
             fi
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:5}
@@ -364,6 +365,16 @@ jobs:
       - revert_migrations:
           id: ${CIRCLE_WORKFLOW_ID:0:5}
           when: on_fail
+
+  cloudfront-update:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout 
+      - run:
+          name: Install dependencies
+          command: |
+            
 
 workflows:
   welcome:
