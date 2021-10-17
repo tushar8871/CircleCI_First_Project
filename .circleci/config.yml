@@ -152,7 +152,7 @@ jobs:
              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:5}" \
              --template-file backend_server.yaml \
              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:5}" \
-             --tags project=udapeople
+             --tags project=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:5}
       - run:
           name: Save Backend URL 
           command: |
@@ -172,7 +172,7 @@ jobs:
              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:5}" \
              --template-file frontend_server.yaml \
              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:5}" \
-             --tags project=udapeople
+             --tags project=udapeople-fronted-${CIRCLE_WORKFLOW_ID:0:5}
 
       - run:
          name: Add Backend Ip to inventory file
@@ -343,7 +343,7 @@ jobs:
             echo "API TEST : ${backend_url}"
             if curl -s ${backend_url} | grep -c 'status':'ok'
             then
-              return 1
+              return 0
             else
               return 1
             fi
@@ -355,7 +355,7 @@ jobs:
             frontend_url="http://frontend-udapeople-${CIRCLE_WORKFLOW_ID}.s3-website-us-east-1.amazonaws.com/#/employees"
             if curl -s ${frontend_url} | grep "Welcome"
             then
-              return 1
+              return 0
             else
               return 1
             fi
@@ -366,6 +366,30 @@ jobs:
           id: ${CIRCLE_WORKFLOW_ID:0:5}
           when: on_fail
             
+
+  cloudfront-update:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout 
+      - run:
+          name: Install dependencies
+          command: |
+            yum install -y tar gzip curl
+            curl -sL https://rpm.nodesource.com/setup_13.x | bash -
+            yum install -y nodejs
+      - run:
+          name: Update cloudfront distribution
+          working_directory: ./.circleci/Cloudformation
+          command: |
+            aws cloudformation deploy \
+              --template-file cloudfront.yaml \
+              --stack-name udapeople-cloudfront-production \
+              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:5}" \
+              --tags project=udapeople
+      - revert_migrations:
+          id: ${CIRCLE_WORKFLOW_ID:0:5}
+          when: on_fail
 
 workflows:
   welcome:
