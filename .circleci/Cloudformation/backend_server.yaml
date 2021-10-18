@@ -6,10 +6,10 @@ Parameters:
     Description: Unique identifier.
     Type: String
 Resources: 
-  UdacitySG:
+  UdapeopleSG:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
-      GroupName: InstanceSG-${ID}
+      GroupName: udacity-InstanceSG-${ID}
       GroupDescription: Allow http to our EC2 instance
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -31,7 +31,7 @@ Resources:
       KeyName: Udacity_IAC
       InstanceType: t2.micro
       SecurityGroups: 
-        - Ref: UdacitySG
+        - Ref: UdapeopleSG
       Tags:
         - Key: Name
-          Value: !Sub Backend_Udapeople-${ID}
+          Value: !Sub Backend_Udacity_Udapeople-${ID}

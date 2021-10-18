@@ -15,15 +15,15 @@ commands:
       - run:
           name: Destroy udapeople backend cfn stack
           command: |
-            aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.id >>
+            aws cloudformation delete-stack --stack-name udacity-udapeople-backend-<< parameters.id >>
           environment:
             TERM: xterm-256color
           when: << parameters.when >>
       - run:
           name: Destroy udapeople frontend cfn stack and S3 bucket
           command: |
-            aws s3 rm "s3://frontend-udapeople-<< parameters.id >>" --recursive
-            aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.id >>
+            aws s3 rm "s3://frontend-udacity-udapeople-<< parameters.id >>" --recursive
+            aws cloudformation delete-stack --stack-name udacity-udapeople-frontend-<< parameters.id >>
           environment:
               TERM: xterm-256color
           when: << parameters.when >>
@@ -119,7 +119,7 @@ jobs:
          name: Scan Vulnerabilities Backend 
          working_directory: ./backend
          command: |
-           npm audit fix --audit-level critical
+           npm audit fix --audit-level critical --force
 
   frontend_scan:
     docker:
@@ -133,7 +133,7 @@ jobs:
          working_directory: ./frontend
          command: |
            npm install
-           npm audit fix --audit-level critical
+           npm audit fix --audit-level critical --force
 
   create_infrastructure:
     docker:
@@ -152,13 +152,13 @@ jobs:
              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:5}" \
              --template-file backend_server.yaml \
              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:5}" \
-             --tags project=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:5}
+             --tags project=udacity-udapeople-backend-${CIRCLE_WORKFLOW_ID:0:5}
       - run:
           name: Save Backend URL 
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:5}" \
+              --filters "Name=tag:project,Values=udacity-udapeople-backend-${CIRCLE_WORKFLOW_ID:0:5}" \
               --output text)
             echo $BACKEND_IP
             curl -H "Content-Type: text/plain" -H "token: 3b83cd84-cf9f-451f-a7cd-9fbc3fed481d" --request PUT --data "http://$BACKEND_IP:3030" https://api.memstash.io/values/Backend-URL
@@ -171,7 +171,7 @@ jobs:
              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:5}" \
              --template-file frontend_server.yaml \
              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:5}" \
-             --tags project=udapeople-fronted-${CIRCLE_WORKFLOW_ID:0:5}
+             --tags project=udacity-udapeople-fronted-${CIRCLE_WORKFLOW_ID:0:5}
 
       - run:
          name: Add Backend Ip to inventory file
@@ -179,7 +179,7 @@ jobs:
          command: |
            aws ec2 describe-instances \
              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-             --filters "Name=tag:project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:5}" \
+             --filters "Name=tag:project,Values=udacity-udapeople-backend-${CIRCLE_WORKFLOW_ID:0:5}" \
              --output text >> inventory.txt
            cat inventory.txt
       - persist_to_workspace:
@@ -277,7 +277,7 @@ jobs:
           name: Deploy frontend to s3 bucket
           working_directory: ./frontend
           command: |
-            aws s3 cp ./dist s3://frontend-udapeople-${CIRCLE_WORKFLOW_ID:0:5}/ --recursive
+            aws s3 cp ./dist s3://frontend-udacity-udapeople-${CIRCLE_WORKFLOW_ID:0:5}/ --recursive
       - persist_to_workspace:
           root: .
           paths:
@@ -351,7 +351,7 @@ jobs:
           name: Smoke Test on Frontend
           working_directory: ./frontend
           command: |
-            frontend_url="http://frontend-udapeople-${CIRCLE_WORKFLOW_ID}.s3-website-us-east-1.amazonaws.com/#/employees"
+            frontend_url="http://frontend-udacity-udapeople-${CIRCLE_WORKFLOW_ID}.s3-website-us-east-1.amazonaws.com/#/employees"
             if curl -s ${frontend_url} | grep "Welcome"
             then
               return 1
@@ -383,24 +383,25 @@ jobs:
           command: |
             set TERM=xterm
             export OldWorkflowID=$(aws cloudformation \
-              list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+              list-exports --query "Exports[?Name==\`WorkflowwID\`].Value" \
               --no-paginate --output text)
             echo $OldWorkflowID
  
             aws cloudformation deploy \
               --template-file cloudfront.yaml \
-              --stack-name udapeople-cloudfront-production-${CIRCLE_WORKFLOW_ID} \
+              --stack-name udacity-udapeople-cloudfront-production-${CIRCLE_WORKFLOW_ID} \
               --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:5}" \
-              --tags project=udapeople
+              --tags project=udacity-udapeople
             
-            export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
-              --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
+            export CurrentWorkflowID=$(echo ${CIRCLE_WORKFLOW_ID:0:5})
 
-            if [[ "${STACKS[@]}" =~ "$oldWorkflowID" ]]
+            if [["$CurrentWorkflowID" != "$OldWorkflowID" ]]
             then
-             aws s3 rm "s3://frontend-udapeople-${OldWorkflowID}" --recursive
-             aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
-             aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
+             aws s3 rm "s3://frontend-udacity-udapeople-${OldWorkflowID}" --recursive
+             aws cloudformation delete-stack --stack-name "udacity-udapeople-frontend-${OldWorkflowID}"
+             aws cloudformation delete-stack --stack-name "udacity-udapeople-backend-${OldWorkflowID}"
+            else
+              echo "$OldWorkflowID==$CurrentWorkflowID => nothing needs to be done..."
             fi
       - revert_migrations:
           id: ${CIRCLE_WORKFLOW_ID:0:5}
@@ -410,42 +411,20 @@ workflows:
   version: 2
   welcome:
     jobs:
-      - build_backend:
-           filters:
-             branches:
-               only:
-                 - master
-                 - feature/build-infra
-      - build_frontend:
-           filters:
-             branches:
-               only: feature/build-infra
+      - build_backend
+      - build_frontend
       - backend_test:
           requires:
             - build_backend
-          filters:
-            branches:
-              only: feature/build-infra
       - frontend_test:
           requires:
             - build_frontend
-          filters:
-            branches:
-              only: feature/build-infra
       - backend_scan:
           requires:
             - build_backend 
-          filters:
-            branches:
-              only: feature/build-infra
-      - frontend_scan:
-          requires:
-           - build_frontend 
-          filters:
-            branches:
-              only: feature/build-infra
-      - create_infrastructure #:
-#         requires: [frontend_test, backend_test, frontend_scan, backend_scan]
+      - frontend_scan
+      - create_infrastructure:
+          requires: [frontend_test, backend_test, frontend_scan, backend_scan]
       - configure-infra:
           requires:
             - create_infrastructure

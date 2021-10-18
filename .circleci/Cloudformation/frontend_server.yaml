@@ -7,19 +7,19 @@ Parameters:
     Type: String
 
 Resources:
-  WebsiteBucket:
+  UdapeopleWebsiteBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub "frontend-udapeople-${ID}"
+      BucketName: !Sub "frontend-udacity-udapeople-${ID}"
       AccessControl: PublicRead
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: 404.html
   
-  WebsiteBucketPolicy:
+  UdapeopleWebsiteBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
-      Bucket: !Ref 'WebsiteBucket'
+      Bucket: !Ref 'UdapeopleWebsiteBucket'
       PolicyDocument:
         Statement:
         - Sid: PublicReadForGetBucketObjects
@@ -29,6 +29,6 @@ Resources:
           Resource: !Join ['', ['arn:aws:s3:::', !Ref 'WebsiteBucket', /*]]
 
 Outputs:
-  WebsiteURL:
-    Value: !GetAtt WebsiteBucket.WebsiteURL
+  UdapeopleWebsiteURL:
+    Value: !GetAtt UdapeopleWebsiteBucket.WebsiteURL
     Description: URL for website hosted on S3
